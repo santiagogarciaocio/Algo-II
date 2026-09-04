@@ -153,13 +153,24 @@ public class ListaEnlazada<T> {
 
     public class ListaIterador{
     	// Completar atributos privados
-        int puntero;
-        
-        ListaIterador(){}
+          int puntero;
+
+        ListaIterador(){
+            puntero = 0;
+        }
 
         public boolean haySiguiente() {
-            null
+            Nodo iterador = primero;
+            Nodo posicion;
+            for(int i = 0; i<longitud();i++){
+                if(i==puntero){
+                    posicion = iterador;
+                }
+                else{iterador = iterador.siguiente;}
+            }
+            return posicion.siguiente != null;
         }
+        
         
         public boolean hayAnterior() {
 	        throw new UnsupportedOperationException("No implementada aun");
