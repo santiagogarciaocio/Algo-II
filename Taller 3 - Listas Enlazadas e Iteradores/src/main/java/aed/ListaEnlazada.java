@@ -151,7 +151,7 @@ public class ListaEnlazada<T> {
         return res = res+"]";
     }
 
-    public class ListaIterador{
+        public class ListaIterador{
     	// Completar atributos privados
           int puntero;
 
@@ -160,34 +160,65 @@ public class ListaEnlazada<T> {
         }
 
         public boolean haySiguiente() {
+            if(longitud()==0){return false;}    
+            if(puntero == 0){return primero != null;}
             Nodo iterador = primero;
-            Nodo posicion;
-            for(int i = 0; i<longitud();i++){
-                if(i==puntero){
-                    posicion = iterador;
-                }
-                else{iterador = iterador.siguiente;}
-            }
-            return posicion.siguiente != null;
+            int i = 0 ;
+            while(i<puntero-1){
+                iterador = iterador.siguiente;
+                i ++;
+            }   
+            return iterador.siguiente != null;
         }
         
         
         public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if(longitud()==0){return false;}
+            if(puntero==longitud()){return ultimo.anterior != null;}
+	        Nodo iterador = primero;
+            int i = 0 ;
+            while(i<puntero){
+                iterador = iterador.siguiente;
+                i ++;
+            }             
+            return iterador.anterior != null;
         }
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if(puntero == 0){
+                puntero ++;
+                return primero.valor;
+            } 
+            Nodo iterador = primero;            
+            int i = 0 ;
+            while(i<puntero-1){
+                iterador = iterador.siguiente;
+                i ++;
+            }
+            puntero ++;
+	        return iterador.siguiente.valor;
         }
         
 
         public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if(puntero == longitud()){
+                puntero --;
+                return ultimo.valor;
+            }
+	        Nodo iterador = primero; 
+            int i = 0 ;
+            while(i<puntero){
+                iterador = iterador.siguiente;
+                i ++;
+            }
+            puntero --;
+	        return iterador.anterior.valor;
         }
     }
 
-    public ListaIterador iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+    public ListaIterador iterador() {	    
+        return new ListaIterador();
     }
 
 }
+
