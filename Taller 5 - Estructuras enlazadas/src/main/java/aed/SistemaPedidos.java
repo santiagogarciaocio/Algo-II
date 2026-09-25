@@ -1,4 +1,4 @@
-package aed;
+/*package aed; */
 import java.util.ArrayList;
 
 public class SistemaPedidos {
@@ -9,13 +9,13 @@ public class SistemaPedidos {
 
     public SistemaPedidos(){
         pedidoPorLlegada = new ListaEnlazada<Pedido>();
-        pedidoPorId = null;
+        pedidoPorId = new ArrayList<Handle<Pedido>>(1);
     }
 
     public void agregarPedido(Pedido pedido){
         Handle<Pedido> nuevoElemento = pedidoPorLlegada.agregarAtras(pedido);
-        if(pedidoPorId == null){
-            pedidoPorId.add(0,nuevoElemento);
+        if(pedidoPorId.isEmpty()){
+            pedidoPorId.add(nuevoElemento);
         }
         else{agregarOrdenado(nuevoElemento);}
     }
@@ -23,24 +23,30 @@ public class SistemaPedidos {
     private void agregarOrdenado(Handle<Pedido> p){
         int i = 0;
         for(Handle<Pedido> e : pedidoPorId){
-            if((valor(e) < valor(p)) && (!(ListaEnlazada.haySiguiente(e)) || (valor(e) < valor(p)))){
-                pedidoPorId.add(i,p);
-            }
+            if(p.valor().id()>e.valor().id()){                
+                break;}
             else{i++;}
         }
+        pedidoPorId.add(i,p);
     }
 
     public Pedido proximoPedidoPorId(){
         Handle<Pedido> proximoHandle = pedidoPorId.remove(pedidoPorId.size()-1);
-        pedidoPorLlegada.eliminar(proximoHandle);
-        return proximoHandle;
+        proximoHandle.eliminar();
+        return proximoHandle.valor();
         
 
     }
 
     public Pedido proximoPedidoPorLlegada(){
-        Handle<Pedido> pedido = pedidoPorLlegada.obtenerPrimero();
-        pedidoPorLlegada.eliminarNodo(pedido);
+        Pedido pedido = pedidoPorLlegada.obtenerPrimero();
+        pedidoPorLlegada.eliminar(0);        
+        for(int i = 0 ; i < pedidoPorId.size();i++){
+            if(pedido.compareTo(pedidoPorId.get(i).valor()) == 0){
+                pedidoPorId.remove(i);
+            }
+        }
+        return pedido;
 
     }
 
@@ -49,14 +55,25 @@ public class SistemaPedidos {
     }
 
     public Pedido pedidoMenorId(){
-        return pedidoPorId.get(pedidoPorId.size()-1);
+        return pedidoPorId.get(pedidoPorId.size()-1).valor();
     }
 
     public String obtenerPedidosEnOrdenDeLlegada(){
-        throw new UnsupportedOperationException("No implementado aún");
+        String res = "[";
+        Iterador<Pedido> actual = pedidoPorLlegada.iterador();
+        while(actual.haySiguiente()){
+            res = res+actual.siguiente().toString();
+            if(actual.haySiguiente()){res=res+", ";}
+        }
+        return res+"]";
     }
 
     public String obtenerPedidosOrdenadosPorId(){
-        throw new UnsupportedOperationException("No implementado aún");
+        String res = "[";
+        for(int i = 0; i<= pedidoPorId.size()-1;i++){
+            res = res+pedidoPorId.get(pedidoPorId.size()-1-i).valor().toString();
+            if(!(i+1==pedidoPorId.size())){res=res+", ";}
+        }
+        return res+"]";
     }
 }
